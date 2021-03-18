@@ -10,12 +10,17 @@
 </head>
 
 <body>
+    <nav class="container">
+        <a href="">LIST</a>
+    </nav>
    <div class="container">
-       <h3>one</h3>
-       <h3>two</h3>
-       <h3>three</h3>
-       <a href="/">Back to home</a>
-   </div>
+       <% const items = [{'id':1, 'item':'potatoes'},{'id':2, 'item':'chilli'},{'id':3, 'item':'yams'}] %>
+       <ol>
+            <li><a href= "potatoes">Potatoes</a></li>
+            <li><a href= "chilli">Chilli</a></li>
+            <li><a href= "yams">Yams</a></li>
+       </ol>
+    </div>
 </body>
 
 </html>
