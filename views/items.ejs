@@ -1,18 +1,24 @@
 
     <%- include('partials/header') %>
    <div class="container">
+        <div>
+            <a class="btn" id = "add" href="/create">Add Item</a> 
+        </div>
         
-       <!-- <ol>
+    <!-- <ol>
             <li><a href= "potatoes">Potatoes</a></li>
             <li><a href= "chilli">Chilli</a></li>
             <li><a href= "yams">Yams</a></li>
        </ol> -->
-       <% for(let item of items) { %>
+       <div class="items">
+            <% for(let item of items) { %>
 
-        <p><%= `${item.id}.${item.name}` %></p>
-
-
-       <% }; %>
+            <p class="item  bg-grey"><%= `${item.id}.${item.name}` %></p>
+    
+    
+           <% }; %>
+       </div>
+       
     </div>
 
 <%- include('partials/footer') %>

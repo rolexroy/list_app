@@ -26,6 +26,7 @@
 header{
     height: 80px;
     align-items: center;
+    margin-bottom: 15px;
 }
 
 .home-content{
@@ -43,6 +44,10 @@ header{
 .home-text{
     color:#54a5a8;
     margin-bottom: 15px;
+}
+
+.brand-text{
+    color:#54a5a8
 }
 
 /* .home-btn{
@@ -70,7 +75,92 @@ ol a{
     text-decoration: none;
     color: inherit;
 }
+
+.btn{
+    background-color: #54a5a8;
+    border-color: #54a5a8;
+    font-size: 18px;
+    color: #fff;
+    text-decoration: none;
+    margin: 9px 0;
+    padding: 7px 6px;
+    border-radius: 5px;
+}
+
+.btn:hover{
+    background-color: #488c8f;
+    border-color: #488c8f;
+}
+
+/* #add { 
+    /* float: right; 
+
+    position: absolute;
+    left: 90%;
+    top:5%;
+
+    
+} */
+
 .illustration{
     width:80%;
 
+}
+
+.items{
+    margin: 20px  0;
+    /* padding-top: 5px;
+    padding-left: 20px; */
+}
+
+.item{
+    padding: 8px 15px;
+    margin-bottom: 4px;
+    font-size: 20px;
+}
+
+form{
+    /* display: block;
+    margin: 0 auto; */
+
+    display: flex;
+    justify-content: center;
+    /* width: 80%; */
+     
+}
+
+.form-content{
+    /* border:1px solid black; */
+    width: 60%;
+}
+
+.new-item{
+    /* border-color: #fff; */
+    border-radius: 5px;
+    border: 0 ;
+    font-size: 26px;
+    padding: 8px;
+    width: 100%;
+    outline: none;
+    
+}
+
+.form-btns{
+    display:flex;
+    justify-content:center;
+
+}
+
+.form-btns > a {
+    text-align: center;
+}
+
+.form-btns > input{
+    margin-left: 10px;
+    outline:none;
+    border: 0;
+}
+
+.form-btns > .btn{
+    width: 150px;
 }
