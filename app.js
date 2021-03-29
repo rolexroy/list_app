@@ -16,6 +16,17 @@ app.get('/', (req , res ) => {
 
 app.get('/items',(req,res) => {
     res.render('items' , {items: items});
+});
+
+app.get('/items/:id',(req,res) => {
+    // get route parameter (id)
+    // console.log(req.params.id);
+    let id = Number(req.params.id);
+    let item = items.find(item => item.id === id);
+    // console.log(req.params.id);
+
+    // console.log(item);
+    res.render ('item' , {item : item});
 })
 
 //grab form
