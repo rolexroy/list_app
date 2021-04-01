@@ -15,12 +15,21 @@
     /* height: 100vh; */
 }
 
+.list-item{
+    margin-top: 20px;
+    
+}
+
 .bg-grey{
     background-color: #f4f4f4;
 }
 
 .bg-light{
     background-color: #fff;
+}
+
+.display{
+    height: 100vh;
 }
 
 header{
@@ -117,6 +126,11 @@ ol a{
     padding: 8px 15px;
     margin-bottom: 4px;
     font-size: 20px;
+}
+
+.anchor{
+    text-decoration: none;
+    color: #000000;
 }
 
 form{
