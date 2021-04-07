@@ -6,20 +6,20 @@ const app = express();
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: 'cheruiyot',
     database: 'list_app'
 });
 
 // connection.connect();
 
-connection.connect(function(err) {
-    if (err) {
-      console.error('error connecting: ' + err.stack);
-      return;
-    }
+// connection.connect(function(err) {
+//     if (err) {
+//       console.error('error connecting: ' + err.stack);
+//       return;
+//     }
   
-    console.log('connected as id ' + connection.threadId);
-  });
+//     console.log('connected as id ' + connection.threadId);
+//   });
 
 app.use(express.static('public'));
 
@@ -28,57 +28,78 @@ app.use(express.urlencoded({extended: false}));
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
-const items = [{id:1, name:'potatoes'},{id:2, name:'chilli'},{id:3, name:'yams'}]
-
+// index page
 app.get('/', (req , res ) => {  
     res.render("index",{name : "vitu fishi"});
 });
 
+//items page 
 app.get('/items',(req,res) => {
-    // res.render('items' , {items: items});
     connection.query(
         'SELECT * FROM items',
         (error, results) => {
-            console.log(results);
+            res.render('items' , {items:results});
         }
     );
 });
 
+// edit page
 app.get('/items/:id',(req,res) => {
-    // res.status(404).send("Sorry can't find that!")
     // get route parameter (id)
-    // console.log(req.params.id);
     let id = Number(req.params.id);
-    let item = items.find(item => item.id === id);
-    // console.log(req.params.id);
-    if(item){
-        res.render ('item' , {item : item});
-    }
-    else{
-        res.render ('error');
-    }
-    // console.log(item);
+
+    connection.query(        
+        'SELECT * FROM items WHERE id = ?', id,
+        (error,results) => {
+            if(results){
+                res.render ('edit' , {item : results[0]});
+            }else{
+                res.render ('error');
+            }
+        }
+    );
     
 })
 
-//grab form
+//grab form to add item
 app.get('/create', (req,res) => {
     res.render('create');
 });
 
-//submit form
+//submit form with newly added item
 app.post('/create',(req, res) =>{
     //grab input data & add to the list
-    let count = items.length + 1;
-    items.push({id: count, name: req.body.newItem});
+    let itemName = req.body.newItem;
+    connection.query('INSERT INTO items (name) VALUES (?)',itemName,
+    (error,results) => {
+        res.redirect('/items')
+    });
     // console.log(items);
     //redirect to items page
-    res.redirect('items');
  
 });
 
+
 //update item
-app.get('/update/:id', (req, res) => {
-    res.render('edit');
+app.post('/update/:id', (req, res) => {
+    let id = Number(req.params.id);
+    let name = req.body.newItem;
+
+    connection.query('UPDATE items SET name = ? WHERE id = ?',
+        [name,id],
+        (error, results) => {
+            res.redirect('/items');
+        }
+    );
 });
+
+//delete item
+app.post('/delete/:id', (req ,res) => {
+    const id = Number(req.params.id);
+    connection.query('DELETE FROM items WHERE id = ?', id,
+        (error, results) => {
+        res.redirect('/items');
+        }
+    );
+})
 app.listen(8080);

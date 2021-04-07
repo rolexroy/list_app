@@ -11,9 +11,31 @@
             <li><a href= "yams">Yams</a></li>
        </ol> -->
        <div class="items">
+           <!-- <% let count = 0; %> -->
             <% for(let item of items) { %>
+                <!-- <% count += 1; %> -->
 
-            <p class="item  bg-grey"> <a class="anchor" href="/items/<%= item.id%>"><%= `${item.id}.${item.name}` %></a> </p>
+                <div class="item bg-grey">
+                    <p><%= `${items.indexOf(item) + 1}.${item.name}` %></p>
+                    <div class="action row">
+                        <!-- <form action="/items/<%= item.id %>" method="post">
+                            <input type="submit" class="btn edit" value ="Edit">
+                        </form> -->
+
+                        <!-- edit button -->
+                        <a class = "btn edit" href="/items/<%= item.id %>">Edit</a>
+
+                        <!-- delete button -->
+                        <form action= "/delete/<%= item.id%>" method="post">
+                            <input class = "btn delete" type="submit" value="Delete">
+                        </form>
+                        <!-- <a class = "btn delete" href="/delete/<%=item.id %>">Delete</a> -->
+                    </div>
+                    <!-- <p class="item  bg-grey"> <a class="anchor" href="/items/<%= item.id%>">    
+                        </a> </p> -->
+                </div>
+
+            
             
     
     

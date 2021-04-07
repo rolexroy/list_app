@@ -3,15 +3,15 @@
 
     <h2>Edit Item</h2>
 
-    <form action="/update" method="post">
+    <form action="/update/<%= item.id %>" method="post">
         <div class="form-content">
-         <input type="text" name="newItem" class="new-item bg-grey" value ="<%= %>">
-         <div class="form-btns">
-             <a href="/items" class="btn">Cancel</a>
-             <input type="submit" class="btn" value = "Save">
-         </div>
-     </div>
-     </form>
+            <input type="text" name="newItem" class="new-item bg-grey" value ="<%= item.name %>">
+            <div class="form-btns">
+                <a href="/items" class="btn">Cancel</a>
+                <input type="submit" class="btn" value = "Save">
+            </div>
+        </div>
+    </form>
 </div>
 
 
