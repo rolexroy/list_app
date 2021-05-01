@@ -1,8 +1,18 @@
 
 const express = require("express");
 const mysql = require('mysql');
+const session = require('express-session');
 
 const app = express();
+
+app.use(
+    session({
+        secret: 'vitu fishi',
+        resave: false,
+        saveUninitialized: false
+    })
+    )
+
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -114,7 +124,7 @@ app.post('/login', (req,res) =>{
     let password = req.body.password;
 
     // TODO : Add validations
-    
+
     connection.query(
         'SELECT * FROM users WHERE email = ?', email,
         (error, results) => {
