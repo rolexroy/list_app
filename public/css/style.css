@@ -155,8 +155,7 @@ form{
     font-size: 26px;
     padding: 8px;
     width: 100%;
-    outline: none;
-    
+    outline: none;  
 }
 
 .form-btns{
@@ -206,4 +205,40 @@ form{
 .delete:hover{
     background-color: #c42d25;
     border-color: #c42d25;
+}
+
+.mid {
+    height: 80vh;
+    overflow: hidden;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mid form{
+    display: block;
+    border: 3px solid #f4f4f4;
+    padding: 16px 14px;
+    border-radius: 5px;
+
+}
+
+.mid h2{
+    text-align: center;
+    color: rgb(0, 0 , 0 , 0.5);
+}
+
+.mid input{
+    border-radius: 5px;
+    border: 0 ;
+    font-size: 26px;
+    padding: 8px;
+    width: 100%;
+    outline: none;
+    margin: 4px 0;  
+}
+
+.mid p{
+    margin: 4px 0;
 }

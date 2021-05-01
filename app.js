@@ -51,7 +51,7 @@ app.get('/items/:id',(req,res) => {
     connection.query(        
         'SELECT * FROM items WHERE id = ?', id,
         (error,results) => {
-            if(results){
+            if(results.length === 1){
                 res.render ('edit' , {item : results[0]});
             }else{
                 res.render ('error');
@@ -101,5 +101,57 @@ app.post('/delete/:id', (req ,res) => {
         res.redirect('/items');
         }
     );
+})
+
+//get Login form
+app.get('/login', (req,res) =>{
+    res.render('login');
+})
+
+//submit Login form
+app.post('/login', (req,res) =>{
+    let email = req.body.email;
+    let password = req.body.password;
+
+    // TODO : Add validations
+    
+    connection.query(
+        'SELECT * FROM users WHERE email = ?', email,
+        (error, results) => {
+            if(password === results[0].pw){
+                console.log('correct password')
+                res.redirect('/items');
+            }else{
+                console.log('incorrect password')
+                res.redirect('/');
+            }
+        }
+    )
+})
+
+//get signup form
+app.get('/signup', (req,res) =>{
+    res.render('signup');
+})
+
+//submit submit form
+app.post('/signup', (req,res) => {
+    let email = req.body.email,
+        username = req.body.username,
+        password = req.body.password,
+        confirmPassword = req.body.confirmPassword;
+
+        // TODO : Add validation
+
+        if(password === confirmPassword){
+            connection.query(
+                'INSERT INTO users (username,pw,email) VALUES (?,?,?)',
+                [username, password, email],
+                res.redirect('/login')
+            )
+            console.log('Account created successfully');
+        } else{
+            console.log('Password/Confirm Password mismatch');
+        }
 })
 app.listen(8080);
