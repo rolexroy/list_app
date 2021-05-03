@@ -36,6 +36,18 @@ header{
     height: 80px;
     align-items: center;
     margin-bottom: 15px;
+   
+}
+
+nav{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+.username{
+    
+    text-align: right;
 }
 
 .home-content{

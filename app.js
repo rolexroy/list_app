@@ -11,7 +11,7 @@ app.use(
         resave: false,
         saveUninitialized: false
     })
-    )
+)
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -38,16 +38,28 @@ app.use(express.urlencoded({extended: false}));
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
+app.use((req, res, next) => {
+     if(req.session.userId === undefined){
+        console.log('You are not logged in');
+        // res.redirect('/');
+    }else{
+        console.log('You are logged in. ');
+        res.locals.username = req.session.username;   
+    }
+    next();
+})
+
 // index page
 app.get('/', (req , res ) => {  
     res.render("index",{name : "vitu fishi"});
 });
 
 //items page 
-app.get('/items',(req,res) => {
-    connection.query(
-        'SELECT * FROM items',
+app.get('/items',(req,res) => {   
+     connection.query(
+        'SELECT * FROM items WHERE user_id = ?', req.session.userId,
         (error, results) => {
+            console.log('User ID: ' + req.session.userId);
             res.render('items' , {items:results});
         }
     );
@@ -59,7 +71,7 @@ app.get('/items/:id',(req,res) => {
     let id = Number(req.params.id);
 
     connection.query(        
-        'SELECT * FROM items WHERE id = ?', id,
+        'SELECT * FROM items WHERE id = ? AND user_id = ?',[id, req.session.userId] ,
         (error,results) => {
             if(results.length === 1){
                 res.render ('edit' , {item : results[0]});
@@ -129,6 +141,8 @@ app.post('/login', (req,res) =>{
         'SELECT * FROM users WHERE email = ?', email,
         (error, results) => {
             if(password === results[0].pw){
+                req.session.userId = results[0].id;
+                req.session.username = results[0].username;
                 console.log('correct password')
                 res.redirect('/items');
             }else{
