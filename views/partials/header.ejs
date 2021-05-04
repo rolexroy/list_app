@@ -12,10 +12,11 @@
 <body class="bg-light">
     <header class="row bg-grey align-item">
         <nav class="container">
-            <a href="" class="home-btn brand-btn">LIST</a>
-            <p class="username">
-                <%= locals.username%>
-            </p>
+            <a href="/" class="home-btn brand-btn">LIST</a>
+            <% if(locals.isLoggedIn){%>
+                <p class="username"><%= locals.username%>, <span class="logout"><a href="/logout">Logout</a></span> </p>
+            <%}%>
+           
         </nav>
         
     </header>

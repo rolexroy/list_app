@@ -40,11 +40,13 @@ app.set('view engine', 'ejs');
 
 app.use((req, res, next) => {
      if(req.session.userId === undefined){
+         res.locals.isLoggedIn = false;
         console.log('You are not logged in');
         // res.redirect('/');
     }else{
         console.log('You are logged in. ');
         res.locals.username = req.session.username;   
+        res.locals.isLoggedIn = true;
     }
     next();
 })
@@ -56,13 +58,18 @@ app.get('/', (req , res ) => {
 
 //items page 
 app.get('/items',(req,res) => {   
-     connection.query(
+
+    if(res.locals.isLoggedIn){
+        connection.query(
         'SELECT * FROM items WHERE user_id = ?', req.session.userId,
         (error, results) => {
             console.log('User ID: ' + req.session.userId);
             res.render('items' , {items:results});
         }
     );
+    }else{
+        res.redirect('/login')
+    }
 });
 
 // edit page
@@ -70,7 +77,8 @@ app.get('/items/:id',(req,res) => {
     // get route parameter (id)
     let id = Number(req.params.id);
 
-    connection.query(        
+    if(res.locals.isLoggedIn){
+        connection.query(        
         'SELECT * FROM items WHERE id = ? AND user_id = ?',[id, req.session.userId] ,
         (error,results) => {
             if(results.length === 1){
@@ -80,19 +88,29 @@ app.get('/items/:id',(req,res) => {
             }
         }
     );
+    }else{
+        res.redirect('/login');
+    }
     
 })
 
 //grab form to add item
 app.get('/create', (req,res) => {
-    res.render('create');
+
+    if(res.locals.isLoggedIn){
+        res.render('create');
+    }else{
+        res.redirect('/login');
+    }
+
 });
 
 //submit form with newly added item
 app.post('/create',(req, res) =>{
     //grab input data & add to the list
     let itemName = req.body.newItem;
-    connection.query('INSERT INTO items (name) VALUES (?)',itemName,
+    connection.query('INSERT INTO items (name, user_id) VALUES (?,?)',
+    [itemName, req.session.userId],
     (error,results) => {
         res.redirect('/items')
     });
@@ -107,8 +125,8 @@ app.post('/update/:id', (req, res) => {
     let id = Number(req.params.id);
     let name = req.body.newItem;
 
-    connection.query('UPDATE items SET name = ? WHERE id = ?',
-        [name,id],
+    connection.query('UPDATE items SET name = ? WHERE id = ? AND user_id = ?',
+        [name, id, req.session.userId],
         (error, results) => {
             res.redirect('/items');
         }
@@ -118,7 +136,7 @@ app.post('/update/:id', (req, res) => {
 //delete item
 app.post('/delete/:id', (req ,res) => {
     const id = Number(req.params.id);
-    connection.query('DELETE FROM items WHERE id = ?', id,
+    connection.query('DELETE FROM items WHERE id = ? AND user_id = ?',[id, req.session.userId], 
         (error, results) => {
         res.redirect('/items');
         }
@@ -127,7 +145,11 @@ app.post('/delete/:id', (req ,res) => {
 
 //get Login form
 app.get('/login', (req,res) =>{
-    res.render('login');
+   if(res.locals.isLoggedIn){
+        res.redirect('/items');
+   }else{
+       res.render('login');
+   }
 })
 
 //submit Login form
@@ -155,7 +177,12 @@ app.post('/login', (req,res) =>{
 
 //get signup form
 app.get('/signup', (req,res) =>{
-    res.render('signup');
+
+    if(res.locals.isLoggedIn){
+        res.redirect('/items');
+    } else {
+        res.render('signup');
+    }
 })
 
 //submit submit form
@@ -174,8 +201,16 @@ app.post('/signup', (req,res) => {
                 res.redirect('/login')
             )
             console.log('Account created successfully');
-        } else{
+        } else {
             console.log('Password/Confirm Password mismatch');
         }
 })
+
+app.get('/logout', (req, res) => {
+    req.session.destroy((error) =>{
+        console.log('You are logout.');
+        res.redirect('/');
+    })
+});
+
 app.listen(8080);
