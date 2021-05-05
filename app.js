@@ -2,6 +2,8 @@
 const express = require("express");
 const mysql = require('mysql');
 const session = require('express-session');
+const bcrypt = require('bcrypt');
+
 
 const app = express();
 
@@ -30,7 +32,7 @@ const connection = mysql.createConnection({
   
 //     console.log('connected as id ' + connection.threadId);
 //   });
-
+connection.connect();
 app.use(express.static('public'));
 
 //Config to get access to form values
@@ -41,7 +43,7 @@ app.set('view engine', 'ejs');
 app.use((req, res, next) => {
      if(req.session.userId === undefined){
          res.locals.isLoggedIn = false;
-        console.log('You are not logged in');
+         console.log('You are not logged in');
         // res.redirect('/');
     }else{
         console.log('You are logged in. ');
@@ -162,7 +164,8 @@ app.post('/login', (req,res) =>{
     connection.query(
         'SELECT * FROM users WHERE email = ?', email,
         (error, results) => {
-            if(password === results[0].pw){
+            bcrypt.compare(password, results[0].pw, (error, isEqual) =>{
+                if(isEqual){
                 req.session.userId = results[0].id;
                 req.session.username = results[0].username;
                 console.log('correct password')
@@ -171,6 +174,9 @@ app.post('/login', (req,res) =>{
                 console.log('incorrect password')
                 res.redirect('/');
             }
+            });
+
+           
         }
     )
 })
@@ -195,12 +201,17 @@ app.post('/signup', (req,res) => {
         // TODO : Add validation
 
         if(password === confirmPassword){
-            connection.query(
-                'INSERT INTO users (username,pw,email) VALUES (?,?,?)',
-                [username, password, email],
-                res.redirect('/login')
-            )
+
+            bcrypt.hash(password, 10, (error, hash) => {
+                connection.query(
+                    'INSERT INTO users (username,pw,email) VALUES (?,?,?)',
+                    [username, hash, email],
+                    res.redirect('/login')
+                );
             console.log('Account created successfully');
+
+            })
+          
         } else {
             console.log('Password/Confirm Password mismatch');
         }
